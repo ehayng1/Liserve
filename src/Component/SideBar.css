@@ -1,0 +1,17 @@
+.tab {
+  /* width: 200px; */
+  border-radius: 10rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-transform: none;
+  /* text-transform: lowercase; */
+}
+.flexcol {
+  display: flex;
+  flex-direction: column;
+}
+.flexrow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
