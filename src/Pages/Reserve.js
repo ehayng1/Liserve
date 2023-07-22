@@ -30,7 +30,7 @@ import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
-import RectangleSeat from "../Component/RectangleSeat";
+
 import { SixSeats } from "../Component/Seats";
 import { SquareSeats } from "../Component/Seats";
 import { upload } from "@testing-library/user-event/dist/upload";
@@ -38,13 +38,13 @@ import { upload } from "@testing-library/user-event/dist/upload";
 import Stair from "../assets/stair.png";
 import StairtoDown from "../assets/StairtoDown.png";
 import { height } from "@mui/system";
+import "./Reserve.css";
 
 export default function Reserve() {
   const [ID, setID] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { id, userName } = useContext(UserContext);
-
-  const totalSeats = 75;
+  const [loading, setIsLoading] = useState(true);
   const [isFirst, setIsFirst] = useState(true);
   const [seats, setSeats] = useState([
     { isReserved: false, seatNumber: 1, reservedBy: "" },
@@ -60,6 +60,7 @@ export default function Reserve() {
 
   // gets user ID
   useEffect(() => {
+    setIsLoading(true);
     async function init() {
       const tempId = await getUserId();
       setID(tempId);
@@ -70,6 +71,7 @@ export default function Reserve() {
 
   // get seat data
   useEffect(() => {
+    setIsLoading(true);
     async function getSeatData() {
       const q = query(
         collection(db, "seats"),
@@ -83,7 +85,6 @@ export default function Reserve() {
         let tempSeats = [];
         firstReservedCount = 0;
         secondReservedCount = 0;
-
         querySnapshot.forEach((doc) => {
           let data = doc.data();
           tempSeats.push(data);
@@ -101,6 +102,7 @@ export default function Reserve() {
         setFirstFloorReserved(firstReservedCount);
         setSecondFloorReserved(secondReservedCount);
         setSeats(tempSeats);
+        setIsLoading(false);
       });
     }
     getSeatData();
@@ -144,291 +146,291 @@ export default function Reserve() {
   }
 
   return (
-    <div
-      style={{
-        // display: "flex",
-        // flexDirection: "row",
-        // flexWrap: "wrap",
-        width: "100%",
-      }}
-    >
-      {/* <div style={{ height: "30%", width: "100%", margin: "0 auto" }}> */}
-      {/* </div> */}
-      {/* <div
-        style={{
-          height: "70%",
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          rowGap: "1.5vh",
-          justifyContent: "center",
-        }}
-      >
-        {seats.map((el, index) => (
-          <Seat
-            key={index}
-            onClick={handleClick}
-            variant={el.isReserved ? "contained" : "outlined"}
-            color={el.reservedBy === ID ? "success" : undefined}
-          >
-            {el.seatNumber}
-          </Seat>
-        ))}
-      </div> */}
-      {isFirst ? (
-        <>
-          <h1 style={{ marginBottom: "5vh" }}>First Floor</h1>
-          <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                }}
-              >
-                <SixSeats startSeat={1} endSeat={7}></SixSeats>
-                <SixSeats startSeat={7} endSeat={13}></SixSeats>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginLeft: "3vw",
-                  }}
-                >
-                  <SixSeats startSeat={13} endSeat={19}></SixSeats>
-                  <SixSeats startSeat={19} endSeat={25}></SixSeats>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginLeft: "3vw",
-                  }}
-                >
-                  <SixSeats startSeat={25} endSeat={31}></SixSeats>
-                  <SixSeats startSeat={31} endSeat={37}></SixSeats>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginLeft: "3vw",
-                  }}
-                >
-                  <SixSeats startSeat={37} endSeat={43}></SixSeats>
-                  <SixSeats startSeat={43} endSeat={49}></SixSeats>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginLeft: "3vw",
-                  }}
-                >
-                  <SixSeats
-                    startSeat={49}
-                    endSeat={55}
-                    direction={"horizontal"}
-                  ></SixSeats>
-                  <SixSeats
-                    startSeat={55}
-                    endSeat={61}
-                    direction={"horizontal"}
-                  ></SixSeats>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h2
-                style={{
-                  textAlign: "center",
-                  marginTop: "2vh",
-                  marginBottom: "5vh",
-                }}
-              >
-                Available: {60 - firstFloorReserved} / 60
-              </h2>
-              <img
-                onClick={() => setIsFirst(!isFirst)}
-                src={Stair}
-                style={{}}
-              ></img>
-            </div>
-          </div>
-        </>
+    <>
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100vh",
+          }}
+        >
+          <img
+            style={{
+              cursor: "pointer",
+              borderRadius: "1rem",
+              width: "30%",
+              height: "40%",
+            }}
+            src="https://i.pinimg.com/originals/26/20/8c/26208c54439dd5d89de0256177496258.gif"
+            alt="Centered image"
+          />
+          <h1>Liserve isLoading...</h1>
+        </div>
       ) : (
-        <>
-          <h1 style={{ marginBottom: "5vh" }}>Second Floor</h1>
-          <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "end",
-                flex: 1,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  marginBottom: "5vh",
-                }}
-              >
-                <div>
-                  <img
-                    onClick={() => setIsFirst(!isFirst)}
-                    src={StairtoDown}
-                    // color : #838383
-                    style={{
-                      marginLeft: "25vw",
-                      marginRight: "2vw",
-                      marginTop: "5vh",
-                    }}
-                  ></img>
-                </div>
-                <div>
-                  <SixSeats
-                    startSeat={95}
-                    endSeat={101}
-                    marginRight="0.5vw"
-                    direction={"horizontal"}
-                  ></SixSeats>
-                  <SixSeats
-                    startSeat={101}
-                    endSeat={107}
-                    marginRight="0.5vw"
-                    direction={"horizontal"}
-                  ></SixSeats>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "end",
-                }}
-              ></div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
-              >
-                <SixSeats startSeat={61} endSeat={67}></SixSeats>
-
-                {/*  square seats */}
+        <div
+          style={{
+            width: "100%",
+          }}
+        >
+          {isFirst ? (
+            <>
+              <h1 style={{ marginBottom: "5vh" }}>First Floor</h1>
+              <div>
                 <div
                   style={{
                     display: "flex",
-                    flexDirection: "column",
-                    marginLeft: "3vw",
-                    marginRight: "3vw",
+                    flexDirection: "row",
+                    justifyContent: "center",
                   }}
                 >
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <SixSeats
-                      startSeat={67}
-                      endSeat={69}
-                      marginRight="0.5vw"
-                    ></SixSeats>
-                    <SixSeats startSeat={69} endSeat={71}></SixSeats>
-                    <SixSeats
-                      startSeat={71}
-                      endSeat={73}
-                      marginRight="0.5vw"
-                    ></SixSeats>
-                    <SixSeats startSeat={73} endSeat={75}></SixSeats>
-                  </div>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "row",
-                      marginTop: "1vw",
+                      flexWrap: "wrap",
                     }}
                   >
-                    <SixSeats
-                      startSeat={75}
-                      endSeat={77}
-                      marginRight="0.5vw"
-                    ></SixSeats>
-                    <SixSeats startSeat={77} endSeat={79}></SixSeats>
+                    <SixSeats startSeat={1} endSeat={7}></SixSeats>
+                    <SixSeats startSeat={7} endSeat={13}></SixSeats>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginLeft: "3vw",
+                      }}
+                    >
+                      <SixSeats startSeat={13} endSeat={19}></SixSeats>
+                      <SixSeats startSeat={19} endSeat={25}></SixSeats>
+                    </div>
 
-                    <SixSeats
-                      startSeat={79}
-                      endSeat={81}
-                      marginRight="0.5vw"
-                    ></SixSeats>
-                    <SixSeats startSeat={81} endSeat={83}></SixSeats>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginLeft: "3vw",
+                      }}
+                    >
+                      <SixSeats startSeat={25} endSeat={31}></SixSeats>
+                      <SixSeats startSeat={31} endSeat={37}></SixSeats>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginLeft: "3vw",
+                      }}
+                    >
+                      <SixSeats startSeat={37} endSeat={43}></SixSeats>
+                      <SixSeats startSeat={43} endSeat={49}></SixSeats>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginLeft: "3vw",
+                      }}
+                    >
+                      <SixSeats
+                        startSeat={49}
+                        endSeat={55}
+                        direction={"horizontal"}
+                      ></SixSeats>
+                      <SixSeats
+                        startSeat={55}
+                        endSeat={61}
+                        direction={"horizontal"}
+                      ></SixSeats>
+                    </div>
                   </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <SixSeats
-                    startSeat={83}
-                    endSeat={89}
-                    marginRight="0.5vw"
-                    // direction={"horizontal"}
-                  ></SixSeats>
-                  <SixSeats
-                    startSeat={89}
-                    endSeat={95}
-                    // direction={"horizontal"}
-                  ></SixSeats>
+                <div>
+                  <h2
+                    style={{
+                      textAlign: "center",
+                      marginTop: "2vh",
+                      marginBottom: "5vh",
+                    }}
+                  >
+                    Available: {60 - firstFloorReserved} / 60
+                  </h2>
+                  <img
+                    className="stair"
+                    onClick={() => setIsFirst(!isFirst)}
+                    src={Stair}
+                    style={{}}
+                  ></img>
                 </div>
               </div>
-            </div>
-            <h2 style={{ marginTop: "5vh" }}>
-              Available: {46 - secondFloorReserved} / 46
-            </h2>
+            </>
+          ) : (
+            <>
+              <h1 style={{ marginBottom: "5vh" }}>Second Floor</h1>
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "end",
+                    flex: 1,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      marginBottom: "5vh",
+                    }}
+                  >
+                    <div>
+                      <img
+                        className="stair"
+                        onClick={() => setIsFirst(!isFirst)}
+                        src={StairtoDown}
+                        style={{
+                          marginLeft: "25vw",
+                          marginRight: "2vw",
+                          marginTop: "5vh",
+                        }}
+                      ></img>
+                    </div>
+                    <div>
+                      <SixSeats
+                        startSeat={95}
+                        endSeat={101}
+                        marginRight="0.5vw"
+                        direction={"horizontal"}
+                      ></SixSeats>
+                      <SixSeats
+                        startSeat={101}
+                        endSeat={107}
+                        marginRight="0.5vw"
+                        direction={"horizontal"}
+                      ></SixSeats>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "end",
+                    }}
+                  ></div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SixSeats startSeat={61} endSeat={67}></SixSeats>
+
+                    {/*  square seats */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginLeft: "3vw",
+                        marginRight: "3vw",
+                      }}
+                    >
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <SixSeats
+                          startSeat={67}
+                          endSeat={69}
+                          marginRight="0.5vw"
+                        ></SixSeats>
+                        <SixSeats startSeat={69} endSeat={71}></SixSeats>
+                        <SixSeats
+                          startSeat={71}
+                          endSeat={73}
+                          marginRight="0.5vw"
+                        ></SixSeats>
+                        <SixSeats startSeat={73} endSeat={75}></SixSeats>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          marginTop: "1vw",
+                        }}
+                      >
+                        <SixSeats
+                          startSeat={75}
+                          endSeat={77}
+                          marginRight="0.5vw"
+                        ></SixSeats>
+                        <SixSeats startSeat={77} endSeat={79}></SixSeats>
+
+                        <SixSeats
+                          startSeat={79}
+                          endSeat={81}
+                          marginRight="0.5vw"
+                        ></SixSeats>
+                        <SixSeats startSeat={81} endSeat={83}></SixSeats>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <SixSeats
+                        startSeat={83}
+                        endSeat={89}
+                        marginRight="0.5vw"
+                        // direction={"horizontal"}
+                      ></SixSeats>
+                      <SixSeats
+                        startSeat={89}
+                        endSeat={95}
+                        // direction={"horizontal"}
+                      ></SixSeats>
+                    </div>
+                  </div>
+                </div>
+                <h2 style={{ marginTop: "5vh" }}>
+                  Available: {46 - secondFloorReserved} / 46
+                </h2>
+              </div>
+            </>
+          )}
+          <div style={{ width: "30%", height: "30%" }}>
+            <LiServeBot></LiServeBot>
           </div>
-        </>
-      )}
-      <div style={{ width: "30%", height: "30%" }}>
-        <LiServeBot></LiServeBot>
-      </div>
-      {/* <Stats
+          {/* <Stats
         totalSeats={totalSeats}
         reserved={reserved}
         available={available}
       ></Stats> */}
-      <Stack spacing={2} sx={{ width: "100%" }}>
-        {/* <Button variant="outlined" onClick={handleOpenSnack}>
+          <Stack spacing={2} sx={{ width: "100%" }}>
+            {/* <Button variant="outlined" onClick={handleOpenSnack}>
           Open success snackbar
         </Button> */}
-        <Snackbar
-          open={open}
-          autoHideDuration={3000}
-          onClose={handleClose}
-          TransitionComponent={TransitionRight}
-        >
-          <Alert
-            onClose={handleClose}
-            severity="info"
-            sx={{ width: "100%", textAlign: "left", fontSize: "1rem" }}
-          >
-            It is not reservation time! <br />
-            Reservation times are 8:10 ~ 8:40 and 11:05 ~ 11:30.
-          </Alert>
-        </Snackbar>
-        {/* <Alert severity="error">This is an error message!</Alert>
+            <Snackbar
+              open={open}
+              autoHideDuration={3000}
+              onClose={handleClose}
+              TransitionComponent={TransitionRight}
+            >
+              <Alert
+                onClose={handleClose}
+                severity="info"
+                sx={{ width: "100%", textAlign: "left", fontSize: "1rem" }}
+              >
+                It is not reservation time! <br />
+                Reservation times are 8:10 ~ 8:40 and 11:05 ~ 11:30.
+              </Alert>
+            </Snackbar>
+            {/* <Alert severity="error">This is an error message!</Alert>
         <Alert severity="warning">This is a warning message!</Alert>
         <Alert severity="info">This is an information message!</Alert>
         <Alert severity="success">This is a success message!</Alert> */}
-      </Stack>
-    </div>
-    // <RectangleSeat></RectangleSeat>
+          </Stack>
+        </div>
+      )}
+    </>
   );
 }

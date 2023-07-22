@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -37,7 +36,7 @@ export function Log() {
   const [name, setName] = useState("");
   let width = window.innerWidth;
   let height = window.innerHeight;
-  console.log(message);
+  // console.log(message);
 
   useEffect(() => {
     async function init() {
@@ -118,10 +117,7 @@ export function Log() {
                       component="span"
                       variant="body2"
                       color="text.primary"
-                    >
-                      {/* Ali Connors */}
-                    </Typography>
-                    {/* {" — I'll be in your neighborhood doing errands this…"} */}
+                    ></Typography>
                     {el.message}
                   </React.Fragment>
                 }

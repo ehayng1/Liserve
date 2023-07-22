@@ -89,7 +89,6 @@ export function SignUp() {
           reserveCount: 0,
           seatReserved: "",
         });
-
         navigate("/signup");
       })
       .catch((error) => {

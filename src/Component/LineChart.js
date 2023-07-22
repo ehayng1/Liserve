@@ -26,7 +26,7 @@ import { VictoryPie } from "victory";
 //   );
 // }
 
-export const MyResponsiveLine = ({ data /* see data tab */ }) => (
+export const MyResponsiveLine = ({ data /* see data tab */, legend }) => (
   <ResponsiveLine
     data={data}
     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
@@ -53,7 +53,8 @@ export const MyResponsiveLine = ({ data /* see data tab */ }) => (
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: "Reservation Count",
+      // legend: "Reservation Count",
+      legend: legend,
       legendOffset: -40,
       legendPosition: "middle",
     }}

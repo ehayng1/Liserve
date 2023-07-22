@@ -20,8 +20,9 @@ import { getUserId } from "../utils/Firebase";
 import { useContext } from "react";
 import { UserContext } from "../Context/UserContext";
 import * as React from "react";
-
+import { useNavigate } from "react-router-dom";
 import MuiAlert from "@mui/material/Alert";
+import { useTheme } from "@emotion/react";
 
 export function SixSeats({
   startSeat,
@@ -34,13 +35,14 @@ export function SixSeats({
   const [grade, setGrade] = useState();
   const [sex, setSex] = useState("");
   const [open, setOpen] = React.useState(false);
+  const [loading, setIsLoading] = React.useState(true);
   const { id, userName } = useContext(UserContext);
   const totalSeats = endSeat - startSeat;
-  const [seats, setSeats] = useState([
-    // { isReserved: false, seatNumber: 1, reservedBy: "" },
-  ]);
+  const [seats, setSeats] = useState([]);
   const [reserved, setReserved] = useState(0);
   const [available, setAvailable] = useState(75);
+  const navigate = useNavigate();
+  const theme = useTheme();
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -48,6 +50,7 @@ export function SixSeats({
 
   // gets user ID and user data
   useEffect(() => {
+    setIsLoading(true);
     let tempId;
     let tempSex;
     let tempGrade;
@@ -69,12 +72,14 @@ export function SixSeats({
       setSex(tempSex);
       setGrade(tempGrade);
       setID(tempId);
+      setIsLoading(false);
     }
     getUserData();
   }, []);
 
   // get seat data
   useEffect(() => {
+    setIsLoading(true);
     // console.log(startSeat + "~" + endSeat + ": ");
     async function getSeatData() {
       const q = query(
@@ -95,6 +100,7 @@ export function SixSeats({
           }
         });
         setSeats(tempSeats);
+        setIsLoading(false);
         // console.log(startSeat + "~" + endSeat + ": ", tempSeats);
       });
     }
@@ -164,7 +170,7 @@ export function SixSeats({
     const docRef = doc(db, "seats", e.target.innerText);
     const userRef = doc(db, "users", ID);
     const seatNumber = e.target.innerText;
-    // console.log("seat: ", seatNumber);
+
     const docSnap = await getDoc(docRef);
     const userSnap = await getDoc(userRef);
     const seatReserved = userSnap.data().seatReserved;
@@ -178,12 +184,11 @@ export function SixSeats({
         // not reserved => reservation weekly limit is set to 2.
         if (!data.isReserved && reserveCount < 2 && seatReserved === "") {
           // show dialog button here
-
           await reserve(docRef, seatNumber);
           return;
         } else {
           // if I have reserved the seat=> cancelation
-          if (data.reservedBy === ID) {
+          if (data.reservedBy === userName) {
             await cancelReservation(docRef, seatNumber);
             return;
           }
@@ -200,7 +205,8 @@ export function SixSeats({
           }
           // someoneelse reserved the seat
           else if (data.reservedBy !== ID) {
-            alert("This seat is already reserved!");
+            alert("This seat is already reserved by" + " " + data.reservedBy);
+
             return;
           }
         }
@@ -218,48 +224,51 @@ export function SixSeats({
     alert("Seat reserved succesfully!");
     const updatedSeat = [...seats];
     updatedSeat[seatNumber - startSeat].isReserved = true;
-    updatedSeat[seatNumber - startSeat].reservedBy = ID;
+    updatedSeat[seatNumber - startSeat].reservedBy = userName;
     setSeats(updatedSeat);
     setReserved(reserved + 1);
     setAvailable(available - 1);
 
     await updateDoc(docRef, {
       isReserved: true,
-      reservedBy: ID,
+      reservedBy: userName,
       reserveCount: increment(1),
     });
     await updateDoc(doc(db, "users", ID), {
       seatReserved: seatNumber,
     });
+    let timePeriod = validateReserveTime();
+    let dataRef = doc(db, "dailyData", new Date().toDateString());
+    await setDoc(
+      dataRef,
+      timePeriod === "Break"
+        ? {
+            reserveCount: increment(1),
+            breakCount: increment(1),
+          }
+        : {
+            reserveCount: increment(1),
+            lunchCount: increment(1),
+          },
+      { merge: true }
+    );
     updateRservationData();
   }
 
   async function updateRservationData() {
     const dataRef = doc(db, "data", "reservationStat");
-    const dataSnap = await getDoc(dataRef);
-    let dateArr = ["monCount", "tueCount", "wedCount", "thuCount", "friCount"];
-    let dateKey = dateArr[new Date().getDay()];
-    let sexKey = sex === "M" ? "maleCount" : "femaleCount";
-    let gradeArr = [
-      "gradeSixCount",
-      "gradeSevenCount",
-      "gradeEightCount",
-      "gradeNineCount",
-      "gradeTenCount",
-      "gradeElevenCount",
-      "gradeTwelveCount",
-    ];
-    let gradeKey = gradeArr[grade - 6];
-    // console.log(dateKey, sexKey, gradeKey);
 
-    // updates date count
+    let dateArr = ["monCount", "tueCount", "wedCount", "thuCount", "friCount"];
+    let dateKey = dateArr[new Date().getDay() - 1];
+    let sexKey = sex === "M" ? "maleCount" : "femaleCount";
+    let gradeArr = ["gradeTenCount", "gradeElevenCount", "gradeTwelveCount"];
+    let gradeKey = gradeArr[grade - 10];
+
     await updateDoc(dataRef, {
       [dateKey]: increment(1),
       [sexKey]: increment(1),
       [gradeKey]: increment(1),
     });
-
-    // updates sex count
   }
   async function cancelReservation(docRef, seatNumber) {
     alert("Seat canceled succesfully!");
@@ -278,41 +287,55 @@ export function SixSeats({
       seatReserved: "",
       reserveCount: increment(-1),
     });
+    let timePeriod = validateReserveTime();
+    let dataRef = doc(db, "dailyData", new Date().toDateString());
+    await setDoc(
+      dataRef,
+      timePeriod === "Break"
+        ? {
+            reserveCount: increment(-1),
+            cancelCount: increment(1),
+            breakCount: increment(-1),
+          }
+        : {
+            reserveCount: increment(-1),
+            cancelCount: increment(1),
+            lunchCount: increment(-1),
+          },
+      { merge: true }
+    );
   }
 
-  const Seat = styled(Button)(({ theme }) => ({
-    // width: "10%",
-    // height: "20%",
+  const Seat = styled(Button)(({}) => ({
+    // rem differs from each window.
+    // vh = view height
     maxWidth: "3rem",
     maxHeight: "3rem",
     marginBottom: "1vh",
     borderRadius: "1rem",
-    // marginRight: "2rem",
+    color: "#1e6cc7",
     fontSize: "1.5rem",
+    // marginRight: "2rem",
   }));
 
   return (
     <div
       style={{
         marginRight: marginRight,
-        // width: "10vw",
-        // width: direction === "vertical" ? "10vw" : "40vw",
-        // height: direction === "vertical" ? "40vh" : "10vh",
-        // height: direction === "vertical" && "10vh",
         display: "flex",
         flexDirection: direction === "vertical" ? "column" : "row",
         flexWrap: "wrap",
         justifyContent: "center",
         columnGap: direction === "vertical" ? "1vw" : "0.5vw",
-        // columGap: "1vw",
       }}
     >
       {seats.map((el, index) => (
         <Seat
+          sx={{ color: el.isReserved && "#ffffff" }}
           key={index}
           onClick={handleClick}
           variant={el.isReserved ? "contained" : "outlined"}
-          color={el.reservedBy === ID ? "success" : undefined}
+          color={el.reservedBy === userName ? "success" : undefined}
         >
           {el.seatNumber}
         </Seat>

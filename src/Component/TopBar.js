@@ -335,19 +335,19 @@ export default function TopBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={handleAlarmMenuOpen}>
+      {/* <MenuItem onClick={handleAlarmMenuOpen}>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={unreadCount} color="error">
             <MailIcon />
           </Badge>
         </IconButton>
         <p>Messages</p>
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem>
         <IconButton
           size="large"
           // aria-label="show 17 new notifications"
-          color="inherit"
+          color="grey"
         >
           <Badge badgeContent={unreadCount} color="error">
             <NotificationsIcon />
@@ -361,7 +361,7 @@ export default function TopBar() {
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
-          color="inherit"
+          color="grey"
         >
           <AccountCircle />
         </IconButton>
@@ -386,20 +386,12 @@ export default function TopBar() {
               "& .MuiToolbar-root": { padding: "0px" },
             }}
           >
-            {/* <IconButton
-      size="large"
-      edge="start"
-      color="inherit"
-      aria-label="open drawer"
-      sx={{ mr: 2 }}
-    >
-      <MenuIcon />
-    </IconButton> */}
             <img
               onClick={() => {
                 navigate("/Reserve");
               }}
               style={{
+                cursor: "pointer",
                 borderRadius: "1rem",
                 width: "4rem",
                 height: "4rem",
@@ -416,6 +408,7 @@ export default function TopBar() {
               noWrap
               component="div"
               sx={{
+                cursor: "pointer",
                 display: { xs: "none", sm: "block" },
                 color: theme.palette.primary.main,
                 fontWeight: 700,
