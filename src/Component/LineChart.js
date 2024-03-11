@@ -1,33 +1,8 @@
 import { ResponsiveLine } from "@nivo/line";
-import { VictoryPie } from "victory";
-
-// export default function LineCharts() {
-//   const PieChart = (
-//     <VictoryPie
-//       data={[
-//         { x: "Cats", y: 35 },
-//         { x: "Dogs", y: 40 },
-//         { x: "Birds", y: 55 },
-//       ]}
-//     />
-//   );
-
-//   return (
-//     <VictoryPie
-//       animate={{
-//         duration: 1000,
-//       }}
-//       data={[
-//         { x: "Cats", y: 35 },
-//         { x: "Dogs", y: 20 },
-//         { x: "Birds", y: 55 },
-//       ]}
-//     />
-//   );
-// }
 
 export const MyResponsiveLine = ({ data /* see data tab */, legend }) => (
   <ResponsiveLine
+    theme={{ legends: { text: { fontSize: "1rem" } } }}
     data={data}
     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
     xScale={{ type: "point" }}

@@ -317,7 +317,7 @@ function App() {
   }, []);
   return (
     <ThemeProvider theme={theme}>
-      <UserContext.Provider value={{ id, userName }}>
+      <UserContext.Provider value={{ id, userName, setUserName }}>
         <div className="App">
           <BrowserRouter>
             <Routes>

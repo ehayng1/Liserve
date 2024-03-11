@@ -44,7 +44,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -104,6 +104,7 @@ export default function TopBar() {
   const [ID, setID] = useState("");
   const [name, setName] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const auth = getAuth();
 
   useEffect(() => {
@@ -156,11 +157,13 @@ export default function TopBar() {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/auth.user
           const uid = user.uid;
-
+          setLoggedIn(true);
           setIsAdmin(uid === "TRN2C65DS2ZSmjDpfI8n7kpYEZL2");
           // ? setIsAdmin(userData.isAdmin)
           // : setIsAdmin(userData.isAdmin);
         } else {
+          setLoggedIn(false);
+          setIsAdmin(false);
           // User is signed out
           // ...
         }
@@ -203,6 +206,19 @@ export default function TopBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const logOut = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        console.log("Sign Out successful");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log("Sign Out failed");
+        console.log(error);
+      });
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <ProfileMenu elevation={0}>
@@ -232,24 +248,40 @@ export default function TopBar() {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
-        <MenuItem
-          style={{ marginBottom: "0.5rem" }}
-          onClick={() => {
-            navigate("/SignUp");
-            handleMenuClose();
-          }}
-        >
-          Sign Up
-        </MenuItem>
-        <MenuItem
-          style={{ marginBottom: "0.5rem" }}
-          onClick={() => {
-            navigate("/SignIn");
-            handleMenuClose();
-          }}
-        >
-          Log In
-        </MenuItem>
+        {loggedIn ? (
+          <MenuItem
+            style={{ marginBottom: "0.5rem" }}
+            onClick={() => {
+              logOut();
+              handleMenuClose();
+              navigate("/Reserve");
+            }}
+          >
+            Log Out
+          </MenuItem>
+        ) : (
+          <>
+            <MenuItem
+              style={{ marginBottom: "0.5rem" }}
+              onClick={() => {
+                navigate("/SignUp");
+                handleMenuClose();
+              }}
+            >
+              Sign Up
+            </MenuItem>
+            <MenuItem
+              style={{ marginBottom: "0.5rem" }}
+              onClick={() => {
+                navigate("/SignIn");
+                handleMenuClose();
+              }}
+            >
+              Log In
+            </MenuItem>
+          </>
+        )}
+
         <Divider></Divider>
         <MenuItem
           style={{ marginBottom: "0.5rem" }}
@@ -260,7 +292,6 @@ export default function TopBar() {
         >
           Reservation
         </MenuItem>
-        {console.log(isAdmin)}
         {isAdmin && (
           <MenuItem
             style={{ marginBottom: "0.5rem" }}

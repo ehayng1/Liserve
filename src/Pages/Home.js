@@ -34,7 +34,15 @@ export default function Home() {
         <TopBar></TopBar>
       </div>
       <Divider></Divider>
-      <div style={{ marginLeft: "5vh", marginRight: "5vh", marginTop: "0vh" }}>
+      {/* <div style={{ marginLeft: "5vh", marginRight: "5vh", marginTop: "0vh" }}> */}
+      <div
+        style={{
+          // marginLeft: "10%",
+          // marginRight: "10%",
+          marginTop: "0vh",
+          marginBottom: "5vh",
+        }}
+      >
         <Outlet />
       </div>
     </>

@@ -203,7 +203,7 @@ export function SignUp() {
                 </Select>
               </FormControl>
               <FormControl sx={{ mt: 2 }} fullWidth>
-                <InputLabel id="demo-simple-select-label">Sex</InputLabel>
+                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                 <Select
                   sx={{ textAlign: "left" }}
                   labelId="demo-simple-select-label"

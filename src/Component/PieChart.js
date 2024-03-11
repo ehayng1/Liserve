@@ -1,18 +1,6 @@
 import { ResponsivePie } from "@nivo/pie";
 import { useEffect, useState } from "react";
-import {
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  increment,
-  query,
-  collection,
-  limit,
-  orderBy,
-  onSnapshot,
-} from "firebase/firestore";
+
 import { db } from "../firebase";
 // import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
@@ -26,13 +14,18 @@ import "chartjs-plugin-datalabels";
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-export const MyResponsivePie = ({ data /* see data tab */ }) => {
+export const MyResponsivePie = ({ data /* see data tab */, total }) => {
   const formatValue = (value, total) => {
     const percentage = ((value / total) * 100).toFixed(1);
     return `${percentage}%`;
   };
   return (
     <ResponsivePie
+      theme={{
+        text: { fill: "ffffff" },
+        legends: { text: { fontSize: "1rem" } },
+        labels: { text: { fontSize: "0.8rem" } },
+      }}
       data={data}
       margin={{ top: 0, right: 80, bottom: 80, left: 80 }}
       innerRadius={0.5}
@@ -51,7 +44,7 @@ export const MyResponsivePie = ({ data /* see data tab */ }) => {
       arcLinkLabelsThickness={2}
       arcLinkLabelsColor={{ from: "color" }}
       // arcLabel="id"
-      arcLabel={(e) => e.value + "%"}
+      arcLabel={(e) => ((e.value / total) * 100).toFixed(2) + "%"}
       arcLabelsSkipAngle={10}
       arcLabelsTextColor={{
         from: "color",
@@ -67,10 +60,12 @@ export const MyResponsivePie = ({ data /* see data tab */ }) => {
           itemsSpacing: 0,
           itemWidth: 10,
           itemHeight: 30,
-          itemTextColor: "#999",
+          // itemTextColor: "#999",
           itemDirection: "left-to-right",
           itemOpacity: 1,
           symbolSize: 15,
+          itemTextColor: "#333333",
+          // fontSize: "2rem",
           symbolShape: "circle",
           effects: [
             {

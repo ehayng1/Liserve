@@ -25,8 +25,8 @@ const auth = getAuth();
 const theme = createTheme();
 
 export function SignIn() {
-  const [email, setEmail] = useState("ehayng@logncoding.com");
-  const [password, setPassword] = useState("Rkdlqwha1!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();

@@ -167,7 +167,7 @@ export default function Reserve() {
             src="https://i.pinimg.com/originals/26/20/8c/26208c54439dd5d89de0256177496258.gif"
             alt="Centered image"
           />
-          <h1>Liserve isLoading...</h1>
+          <h1>Liserve is loading...</h1>
         </div>
       ) : (
         <div
@@ -177,7 +177,15 @@ export default function Reserve() {
         >
           {isFirst ? (
             <>
-              <h1 style={{ marginBottom: "5vh" }}>First Floor</h1>
+              <h1
+                style={{
+                  marginBottom: "5vh",
+                  marginLeft: "10%",
+                  marginRight: "10%",
+                }}
+              >
+                First Floor
+              </h1>
               <div>
                 <div
                   style={{
@@ -193,8 +201,48 @@ export default function Reserve() {
                       flexWrap: "wrap",
                     }}
                   >
-                    <SixSeats startSeat={1} endSeat={7}></SixSeats>
-                    <SixSeats startSeat={7} endSeat={13}></SixSeats>
+                    <div style={{ marginRight: "3vw" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <SixSeats
+                          startSeat={1}
+                          endSeat={4}
+                          direction={"horizontal"}
+                          alignment="flex-start"
+                        ></SixSeats>
+
+                        <SixSeats
+                          startSeat={4}
+                          endSeat={7}
+                          direction={"horizontal"}
+                          alignment="flex-start"
+                        ></SixSeats>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          marginTop: "5vh",
+                        }}
+                      >
+                        <SixSeats
+                          direction={"horizontal"}
+                          startSeat={7}
+                          endSeat={13}
+                        ></SixSeats>
+                        <SixSeats
+                          direction={"horizontal"}
+                          startSeat={13}
+                          endSeat={19}
+                        ></SixSeats>
+                      </div>
+                    </div>
+                    <SixSeats startSeat={19} endSeat={25}></SixSeats>
+                    <SixSeats startSeat={25} endSeat={31}></SixSeats>
                     <div
                       style={{
                         display: "flex",
@@ -202,8 +250,8 @@ export default function Reserve() {
                         marginLeft: "3vw",
                       }}
                     >
-                      <SixSeats startSeat={13} endSeat={19}></SixSeats>
-                      <SixSeats startSeat={19} endSeat={25}></SixSeats>
+                      <SixSeats startSeat={31} endSeat={37}></SixSeats>
+                      <SixSeats startSeat={37} endSeat={43}></SixSeats>
                     </div>
 
                     <div
@@ -213,20 +261,11 @@ export default function Reserve() {
                         marginLeft: "3vw",
                       }}
                     >
-                      <SixSeats startSeat={25} endSeat={31}></SixSeats>
-                      <SixSeats startSeat={31} endSeat={37}></SixSeats>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        marginLeft: "3vw",
-                      }}
-                    >
-                      <SixSeats startSeat={37} endSeat={43}></SixSeats>
                       <SixSeats startSeat={43} endSeat={49}></SixSeats>
+                      <SixSeats startSeat={49} endSeat={55}></SixSeats>
                     </div>
-                    <div
+
+                    {/* <div
                       style={{
                         display: "flex",
                         flexDirection: "column",
@@ -243,7 +282,7 @@ export default function Reserve() {
                         endSeat={61}
                         direction={"horizontal"}
                       ></SixSeats>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div>
@@ -254,7 +293,7 @@ export default function Reserve() {
                       marginBottom: "5vh",
                     }}
                   >
-                    Available: {60 - firstFloorReserved} / 60
+                    Available: {54 - firstFloorReserved} / 54
                   </h2>
                   <img
                     className="stair"
@@ -268,7 +307,7 @@ export default function Reserve() {
           ) : (
             <>
               <h1 style={{ marginBottom: "5vh" }}>Second Floor</h1>
-              <div>
+              <div style={{ marginLeft: "10%", marginRight: "10%" }}>
                 <div
                   style={{
                     display: "flex",
@@ -285,7 +324,7 @@ export default function Reserve() {
                       marginBottom: "5vh",
                     }}
                   >
-                    <div>
+                    <div style={{ flex: 1 }}>
                       <img
                         className="stair"
                         onClick={() => setIsFirst(!isFirst)}
@@ -299,14 +338,14 @@ export default function Reserve() {
                     </div>
                     <div>
                       <SixSeats
-                        startSeat={95}
-                        endSeat={101}
+                        startSeat={98}
+                        endSeat={104}
                         marginRight="0.5vw"
                         direction={"horizontal"}
                       ></SixSeats>
                       <SixSeats
-                        startSeat={101}
-                        endSeat={107}
+                        startSeat={104}
+                        endSeat={110}
                         marginRight="0.5vw"
                         direction={"horizontal"}
                       ></SixSeats>
@@ -326,12 +365,11 @@ export default function Reserve() {
                     style={{
                       display: "flex",
                       flexDirection: "row",
-                      justifyContent: "center",
+                      justifyContent: "space-evenly",
                     }}
                   >
-                    <SixSeats startSeat={61} endSeat={67}></SixSeats>
+                    <SixSeats startSeat={55} endSeat={62}></SixSeats>
 
-                    {/*  square seats */}
                     <div
                       style={{
                         display: "flex",
@@ -340,19 +378,28 @@ export default function Reserve() {
                         marginRight: "3vw",
                       }}
                     >
-                      <div style={{ display: "flex", flexDirection: "row" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                        }}
+                      >
                         <SixSeats
-                          startSeat={67}
-                          endSeat={69}
+                          startSeat={62}
+                          endSeat={64}
                           marginRight="0.5vw"
                         ></SixSeats>
-                        <SixSeats startSeat={69} endSeat={71}></SixSeats>
                         <SixSeats
-                          startSeat={71}
-                          endSeat={73}
+                          marginRight="2vw"
+                          startSeat={64}
+                          endSeat={66}
+                        ></SixSeats>
+                        <SixSeats
+                          startSeat={66}
+                          endSeat={68}
                           marginRight="0.5vw"
                         ></SixSeats>
-                        <SixSeats startSeat={73} endSeat={75}></SixSeats>
+                        <SixSeats startSeat={68} endSeat={70}></SixSeats>
                       </div>
                       <div
                         style={{
@@ -362,37 +409,87 @@ export default function Reserve() {
                         }}
                       >
                         <SixSeats
-                          startSeat={75}
-                          endSeat={77}
+                          startSeat={70}
+                          endSeat={72}
                           marginRight="0.5vw"
                         ></SixSeats>
-                        <SixSeats startSeat={77} endSeat={79}></SixSeats>
+                        <SixSeats
+                          marginRight="2vw"
+                          startSeat={72}
+                          endSeat={74}
+                        ></SixSeats>
 
                         <SixSeats
-                          startSeat={79}
-                          endSeat={81}
+                          startSeat={74}
+                          endSeat={76}
                           marginRight="0.5vw"
                         ></SixSeats>
-                        <SixSeats startSeat={81} endSeat={83}></SixSeats>
+                        <SixSeats startSeat={76} endSeat={78}></SixSeats>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          marginTop: "1vw",
+                        }}
+                      >
+                        <SixSeats
+                          startSeat={78}
+                          endSeat={80}
+                          marginRight="0.5vw"
+                        ></SixSeats>
+                        <SixSeats
+                          marginRight="2vw"
+                          startSeat={80}
+                          endSeat={82}
+                        ></SixSeats>
+
+                        <SixSeats
+                          startSeat={82}
+                          endSeat={84}
+                          marginRight="0.5vw"
+                        ></SixSeats>
+                        <SixSeats
+                          marginRight="2vw"
+                          startSeat={84}
+                          endSeat={86}
+                        ></SixSeats>
+
+                        <SixSeats
+                          startSeat={86}
+                          endSeat={88}
+                          marginRight="0.5vw"
+                        ></SixSeats>
+                        <SixSeats
+                          marginRight="2vw"
+                          startSeat={88}
+                          endSeat={90}
+                        ></SixSeats>
                       </div>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginLeft: "3vw",
+                      }}
+                    >
                       <SixSeats
-                        startSeat={83}
-                        endSeat={89}
+                        startSeat={90}
+                        endSeat={94}
                         marginRight="0.5vw"
-                        // direction={"horizontal"}
+                        alignment="flex-end"
                       ></SixSeats>
                       <SixSeats
-                        startSeat={89}
-                        endSeat={95}
-                        // direction={"horizontal"}
+                        startSeat={94}
+                        endSeat={98}
+                        alignment="flex-end"
                       ></SixSeats>
                     </div>
                   </div>
                 </div>
                 <h2 style={{ marginTop: "5vh" }}>
-                  Available: {46 - secondFloorReserved} / 46
+                  Available: {55 - secondFloorReserved} / 55
                 </h2>
               </div>
             </>
