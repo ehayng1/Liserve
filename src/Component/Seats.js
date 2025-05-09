@@ -26,7 +26,7 @@ import MuiAlert from "@mui/material/Alert";
 import { useTheme } from "@emotion/react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-export function SixSeats({
+export function SeatsFactory({
   startSeat,
   endSeat,
   direction = "vertical",
@@ -39,14 +39,11 @@ export function SixSeats({
   const [sex, setSex] = useState("");
   const [open, setOpen] = React.useState(false);
   const [loading, setIsLoading] = React.useState(true);
-  // const { id, userName } = useContext(UserContext);
   const [userName, setUserName] = useState();
   const totalSeats = endSeat - startSeat;
   const [seats, setSeats] = useState([]);
   const [reserved, setReserved] = useState(0);
   const [available, setAvailable] = useState(75);
-  const navigate = useNavigate();
-  const theme = useTheme();
   const auth = getAuth();
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -98,10 +95,8 @@ export function SixSeats({
     getUserData();
   }, []);
 
-  // get seat data
   useEffect(() => {
     setIsLoading(true);
-    // console.log(startSeat + "~" + endSeat + ": ");
     async function getSeatData() {
       const q = query(
         collection(db, "seats"),
@@ -340,7 +335,8 @@ export function SixSeats({
     );
   }
 
-  const Seat = styled(Button)(({}) => ({
+  // SeatFactory
+  const SeatFactory = styled(Button)(({}) => ({
     // rem differs from each window.
     // vh = view height
     maxWidth: "3rem",
@@ -365,7 +361,8 @@ export function SixSeats({
       }}
     >
       {seats.map((el, index) => (
-        <Seat
+        //use of SeatFactory
+        <SeatFactory
           color={el.reservedBy === userName ? "success" : undefined}
           sx={{ color: el.isReserved && "#ffffff" }}
           key={index}
@@ -373,17 +370,18 @@ export function SixSeats({
           variant={el.isReserved ? "contained" : "outlined"}
         >
           {el.seatNumber}
-        </Seat>
+        </SeatFactory>
       ))}
     </div>
   );
 }
 
+// another useage of seatsFactory: Square seats 2x2
 export function SquareSeats({ startSeat, endSeat }) {
   return (
     <div style={{ display: "flex", flexDirection: "row" }}>
-      <SixSeats statSeat={startSeat} endSeat={startSeat + 2}></SixSeats>
-      <SixSeats statSeat={endSeat - 2} endSeat={endSeat}></SixSeats>
+      <SeatsFactory statSeat={startSeat} endSeat={startSeat + 2}></SeatsFactory>
+      <SeatsFactory statSeat={endSeat - 2} endSeat={endSeat}></SeatsFactory>
     </div>
   );
 }
